@@ -1,8 +1,8 @@
 package cmd
 
 import (
+	"cli/cmd/api"
 	"fmt"
-	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -18,6 +18,6 @@ var vpcsList = &cobra.Command{
 	Short: "list all vpcs",
 	Long:  "list all vpcs",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Echo: " + strings.Join(args, " "))
+		fmt.Println(api.GetVpcsList())
 	},
 }
