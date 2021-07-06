@@ -1,0 +1,27 @@
+05.07
+    *c oop:
+        .h :
+            typedef struct A
+            f(A* this)
+            A* initA()
+        .c : 
+            struct A {
+                /* some local fields*/
+            }
+    methods:
+        func (provider) (args) (outs) {}
+    var:
+        var a A
+        a := A{}
+    shared hostings:
+        2 компании, plesk/cpanel
+    da wae:
+        subnet
+        vpc
+        eip
+        unbind eip
+        nat (pic)
+        loadbalancer
+06.07
+    $ jq  // for formatting
+    for cloudservers /detail?offset=1&limit=10 
