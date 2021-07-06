@@ -3,30 +3,35 @@ package main
 import (
 	"api/apigw/core"
 	"bufio"
-	"bytes"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
 )
 
+var signer core.Signer
+
 const (
-	kernogourl = "https://vpc.ru-moscow-1.hc.sbercloud.ru/v1/0ce61dbdd30024ef2f4dc006072bb596/vpcs?limit=2"
-	defaulturl = "https://vpc.ru-moscow-1.hc.sbercloud.ru/v1/0b5a73ddd98027372f2ec00668b88856/vpcs?limit=2"
-	iamurl     = "https://iam.ru-moscow-1.hc.sbercloud.ru/v3/users/0ce43a5b788024e71f03c0060aaf6125/projects"
+	defaultProjectId = "0b5a73ddd98027372f2ec00668b88856"
+	vpcPrefix        = "vpc"
+	iamPrefix        = "iam"
+	endpoint         = ".ru-moscow-1.hc.sbercloud.ru/"
+	vpcSuffix        = "/vpcs?limit=2"
+	defaulturl       = "https://vpc.ru-moscow-1.hc.sbercloud.ru/v1/0b5a73ddd98027372f2ec00668b88856/vpcs?limit=2"
+	iamurl           = "https://iam.ru-moscow-1.hc.sbercloud.ru/v3/users/0ce43a5b788024e71f03c0060aaf6125/projects"
 )
 
 func main() {
-	s := initSigner()
-	req, _ := http.NewRequest(
-		"GET",
-		kernogourl,
-		ioutil.NopCloser(bytes.NewBuffer([]byte(""))),
-	)
+	signer = initSigner()
+	resp, err := getVpcsList()
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(resp)
+}
 
-	req.Header.Add("content-type", "application/json")
-	req.Header.Add("X-Project-Id", "0ce61dbdd30024ef2f4dc006072bb596")
-	s.Sign(req)
+func doGet(req *http.Request) (s string, err error) {
+	signer.Sign(req)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		fmt.Println(err)
@@ -34,10 +39,9 @@ func main() {
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Println(err)
+		return "", err
 	}
-
-	fmt.Println(string(body))
+	return string(body), nil
 }
 
 func initSigner() (s core.Signer) {
