@@ -11,23 +11,22 @@ import (
 )
 
 const (
-	url        = "https://vpc.ru-moscow-1.hc.sbercloud.ru/v1/0ce61dbdd30024ef2f4dc006072bb596/vpcs?limit=2"
+	kernogourl = "https://vpc.ru-moscow-1.hc.sbercloud.ru/v1/0ce61dbdd30024ef2f4dc006072bb596/vpcs?limit=2"
 	defaulturl = "https://vpc.ru-moscow-1.hc.sbercloud.ru/v1/0b5a73ddd98027372f2ec00668b88856/vpcs?limit=2"
+	iamurl     = "https://iam.ru-moscow-1.hc.sbercloud.ru/v3/users/0ce43a5b788024e71f03c0060aaf6125/projects"
 )
 
 func main() {
 	s := initSigner()
-	//fmt.Println(s.Key)
 	req, _ := http.NewRequest(
 		"GET",
-		defaulturl,
+		kernogourl,
 		ioutil.NopCloser(bytes.NewBuffer([]byte(""))),
 	)
 
 	req.Header.Add("content-type", "application/json")
-
+	req.Header.Add("X-Project-Id", "0ce61dbdd30024ef2f4dc006072bb596")
 	s.Sign(req)
-	//fmt.Println(req.Header)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		fmt.Println(err)
@@ -39,7 +38,6 @@ func main() {
 	}
 
 	fmt.Println(string(body))
-
 }
 
 func initSigner() (s core.Signer) {
