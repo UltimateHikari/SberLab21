@@ -7,6 +7,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var projectId string
+
 var vpcsCmd = &cobra.Command{
 	Use:   "vpcs [options]",
 	Short: "subcommand for vpcs",
@@ -18,6 +20,6 @@ var vpcsList = &cobra.Command{
 	Short: "list all vpcs",
 	Long:  "list all vpcs",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(api.GetVpcsList())
+		fmt.Println(api.GetVpcsList(projectId))
 	},
 }

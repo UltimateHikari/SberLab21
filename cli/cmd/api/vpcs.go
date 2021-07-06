@@ -13,7 +13,7 @@ func GetVpcsList(ids ...string) (resp string, err error) {
 	case len(ids) > 1:
 		return "", errors.New("too many projIds")
 	case len(ids) == 1:
-		curId = ids[1]
+		curId = ids[0]
 	}
 	req, _ := http.NewRequest(
 		"GET",

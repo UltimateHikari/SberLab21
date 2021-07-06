@@ -7,6 +7,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const defaultProjectId = "0b5a73ddd98027372f2ec00668b88856"
+
 var Number int
 var rootCmd = &cobra.Command{
 	Use:   "sbcli [subcommands]",
@@ -26,4 +28,5 @@ func init() {
 	rootCmd.AddCommand(vpcsCmd)
 	vpcsCmd.AddCommand(vpcsList)
 	vpcsList.Flags().IntVarP(&Number, "number", "n", 2, "limit of vpcs shown")
+	vpcsList.Flags().StringVarP(&projectId, "pid", "p", defaultProjectId, "project id for query")
 }
