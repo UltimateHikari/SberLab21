@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var Number int
 var rootCmd = &cobra.Command{
 	Use:   "sbcli [subcommands]",
 	Short: "Sbercloud cli",
@@ -21,6 +22,8 @@ func Execute() {
 	}
 }
 
-func init(){
-	rootCmd.AddCommand(vpcs)
+func init() {
+	rootCmd.AddCommand(vpcsCmd)
+	vpcsCmd.AddCommand(vpcsList)
+	vpcsList.Flags().IntVarP(&Number, "number", "n", 2, "limit of vpcs shown")
 }
