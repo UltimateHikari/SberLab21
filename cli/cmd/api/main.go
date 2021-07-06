@@ -12,6 +12,7 @@ import (
 var signer core.Signer
 
 const (
+	keyPath          = "/home/andy/Code/2021/keys"
 	defaultProjectId = "0b5a73ddd98027372f2ec00668b88856"
 	vpcPrefix        = "vpc"
 	iamPrefix        = "iam"
@@ -21,13 +22,8 @@ const (
 	iamurl           = "https://iam.ru-moscow-1.hc.sbercloud.ru/v3/users/0ce43a5b788024e71f03c0060aaf6125/projects"
 )
 
-func main() {
-	signer = initSigner()
-	resp, err := GetVpcsList()
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(resp)
+func init() {
+	initSigner()
 }
 
 func doGet(req *http.Request) (s string, err error) {
@@ -35,6 +31,7 @@ func doGet(req *http.Request) (s string, err error) {
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		fmt.Println(err)
+		return "", err
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
@@ -44,20 +41,19 @@ func doGet(req *http.Request) (s string, err error) {
 	return string(body), nil
 }
 
-func initSigner() (s core.Signer) {
-	f, _ := os.Open("../../keys")
+func initSigner() {
+	f, err := os.Open(keyPath) //TODO: change to cli args
 	defer f.Close()
+	if err != nil {
+		fmt.Println(err)
+	}
 	scanner := bufio.NewScanner(f)
 
 	var tokens [2]string
 	for i := 0; scanner.Scan(); i++ {
 		tokens[i] = scanner.Text()
-		//fmt.Println(tokens[i])
 	}
 
-	s = core.Signer{
-		Key:    tokens[0],
-		Secret: tokens[1],
-	}
-	return s
+	signer.Key = tokens[0]
+	signer.Secret = tokens[1]
 }
