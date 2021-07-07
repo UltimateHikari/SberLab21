@@ -25,3 +25,12 @@
 06.07
     $ jq  // for formatting
     for cloudservers /detail?offset=1&limit=10 
+07.07 
+    main.tf 
+    terraform init
+    sberlab privder on tf site
+    validate (p.e vpc creation)
+    apply destroy`
+    init-script for running sth after ecs gone online?
+    gateway: add fields for vpc dnat instead direct connect
+    read: http healthchecks (200 resp but on which endpoint)?

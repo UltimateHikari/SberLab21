@@ -3,3 +3,4 @@ pkg/
 bin/
 ./bin
 ./bin/*
+terraform/*terraform*
