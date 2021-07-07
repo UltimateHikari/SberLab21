@@ -18,6 +18,7 @@ const (
 	iamPrefix        = "iam"
 	endpoint         = ".ru-moscow-1.hc.sbercloud.ru/"
 	vpcSuffix        = "/vpcs?limit=2"
+	iamSuffix        = "/projects"
 	defaulturl       = "https://vpc.ru-moscow-1.hc.sbercloud.ru/v1/0b5a73ddd98027372f2ec00668b88856/vpcs?limit=2"
 	iamurl           = "https://iam.ru-moscow-1.hc.sbercloud.ru/v3/users/0ce43a5b788024e71f03c0060aaf6125/projects"
 )
