@@ -34,3 +34,5 @@
     init-script for running sth after ecs gone online?
     gateway: add fields for vpc dnat instead direct connect
     read: http healthchecks (200 resp but on which endpoint)?
+08.07
+    vue + axios + bootstrap
