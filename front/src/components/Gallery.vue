@@ -3,7 +3,9 @@
     <div class="gallery-panel"
          v-for="photo in photos"
          :key="photo.id">
-      <img :src="thumbUrl(photo.filename)">
+      <router-link :to="`/photo/${photo.id}`">
+        <img :src="thumbUrl(photo.filename)">
+      </router-link>
     </div>
   </div>
 </template>
@@ -32,7 +34,7 @@ export default {
     grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
     grid-gap: 1rem;
     max-width: 80rem;
-    margin: 5rem auto;
+    margin: 2rem auto;
     padding: 0 5rem;
   }  
   .gallery-panel img {
