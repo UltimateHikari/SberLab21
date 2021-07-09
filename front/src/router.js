@@ -10,7 +10,7 @@ const routeInfos = [
         component : Home,
     },
     {
-        path : "/photo/:id",
+        path : "/photo/:filename",
         name: "Photo",
         component: Photo,
     }

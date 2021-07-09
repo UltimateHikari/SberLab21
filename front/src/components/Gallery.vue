@@ -3,7 +3,7 @@
     <div class="gallery-panel"
          v-for="photo in photos"
          :key="photo.id">
-      <router-link :to="`/photo/${photo.id}`">
+      <router-link :to="`/photo/${photo.filename}`">
         <img :src="thumbUrl(photo.filename)">
       </router-link>
     </div>
@@ -11,23 +11,24 @@
 </template>
 
 <script>
-import photos from '@/photos.json';
-import axios from "axios"
+import axios from "axios";
+import ip from "@/ip.json";
+
 
 const axios_instance = axios.create({
-  baseURL: 'http://localhost:8000/list'
+  baseURL: "http://" + ip.ip + "/photos/list",
 })
 
 export default {
   name: 'Gallery',
   data() {
     return {
-      photos,
+      photos: [],
     };
   },
   created() {
-    axios_instance.get().then(result => {
-      console.log(result)
+    axios_instance.get().then((result) => {
+      this.photos = result.data;
     }, error => {
       console.error(error);
     });

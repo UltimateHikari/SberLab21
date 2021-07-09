@@ -1,6 +1,6 @@
 <template>
   <div class="lightbox" @click.self="close">    
-  <img :src="photoUrl(photo.filename)">    
+  <img :src="photoUrl(this.$route.params.filename)">    
     <div class="lightbox-info">
       <div class="lightbox-info-inner">
         Info
@@ -10,13 +10,12 @@
 </template>
 
 <script>
-import photos from '@/photos.json';
 
 export default {
   name: 'Photo',
   data() {
     return {
-      photos,
+      
     };
   },
   computed: {
