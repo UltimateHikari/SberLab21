@@ -12,6 +12,11 @@
 
 <script>
 import photos from '@/photos.json';
+import axios from "axios"
+
+const axios_instance = axios.create({
+  baseURL: 'http://localhost:8000/list'
+})
 
 export default {
   name: 'Gallery',
@@ -20,6 +25,14 @@ export default {
       photos,
     };
   },
+  created() {
+    axios_instance.get().then(result => {
+      console.log(result)
+    }, error => {
+      console.error(error);
+    });
+  },
+
   methods: {
     thumbUrl(filename) {
       return require(`../assets/images/thumbnails/${filename}`);
