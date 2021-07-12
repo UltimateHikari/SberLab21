@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: front-pod
+  labels:
+    role: myrole
+spec:
+  containers:
+    - name: hikarifront
+      image: ultimatehikari/sberlab_07_21:front
