@@ -12,11 +12,9 @@
 
 <script>
 import axios from "axios";
-import ip from "@/ip.json";
-
 
 const axios_instance = axios.create({
-  baseURL: "http://" + ip.ip + "/photos/list",
+  baseURL: "http://" + process.env.VUE_APP_ROOT_API + "/photos/list",
 })
 
 export default {

@@ -1,4 +1,4 @@
-module head.go
+module head
 
 go 1.16
 

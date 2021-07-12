@@ -13,6 +13,8 @@ const (
 	database = "./photos.json"
 )
 
+var logger *log.Logger
+
 type APIResource struct{}
 
 func (p APIResource) RegisterTo(container *restful.Container) {
@@ -21,7 +23,7 @@ func (p APIResource) RegisterTo(container *restful.Container) {
 	ws.Consumes(restful.MIME_JSON)
 	ws.Produces(restful.MIME_JSON, "image/jpeg")
 
-	ws.Route(ws.GET("list").To(p.getList).
+	ws.Route(ws.GET("/list").To(p.getList).
 		Doc("get all todos"))
 
 	ws.Route(ws.GET("/{id}").To(p.getPhoto).
@@ -45,9 +47,18 @@ func (p APIResource) RegisterTo(container *restful.Container) {
 }
 
 func main() {
+	f, err := os.OpenFile("text.log",
+		os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		log.Println(err)
+	}
+	defer f.Close()
+
+	logger = log.New(f, "prefix", log.LstdFlags)
+
 	port := ":8000"
 	if len(os.Args) == 1 {
-		log.Print("no port arg, using default")
+		logger.Print("no port arg, using default")
 	} else {
 		port = ":" + os.Args[1]
 	}
@@ -69,8 +80,8 @@ func main() {
 	wsContainer.Filter(wsContainer.OPTIONSFilter)
 	wsContainer.Filter(CORSFilter)
 
-	log.Print("start listening on localhost:" + port)
-	log.Fatal(http.ListenAndServe(port, wsContainer))
+	logger.Print("start listening on localhost:" + port)
+	logger.Fatal(http.ListenAndServe(port, wsContainer))
 }
 
 func CORSFilter(req *restful.Request, resp *restful.Response, chain *restful.FilterChain) {
@@ -80,10 +91,12 @@ func CORSFilter(req *restful.Request, resp *restful.Response, chain *restful.Fil
 
 func (p *APIResource) getList(req *restful.Request, resp *restful.Response) {
 	//dummy, change to database server
+	logger.Print("getting list")
 	http.ServeFile(resp.ResponseWriter, req.Request, database)
 }
 
 func (p *APIResource) getPhoto(req *restful.Request, resp *restful.Response) {
 	id := req.PathParameter("id")
-	log.Print("req for " + id)
+	logger.Print("req for " + id)
+	resp.WriteEntity("kinda photo")
 }

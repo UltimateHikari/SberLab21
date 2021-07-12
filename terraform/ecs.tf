@@ -10,7 +10,7 @@ resource "sbercloud_compute_instance" "ecs_1" {
   key_pair = "KeyPair-rudometov"
   security_groups   = ["default", "arudometov-sg"]
   availability_zone = "ru-moscow-1a"
-  user_data = "#!/bin/bash\n echo 'hello' > /root/hello.txt"
+  user_data = file("./dockerapiserver.sh")
 
   system_disk_type = "SAS"
   system_disk_size = 40
@@ -27,7 +27,7 @@ resource "sbercloud_compute_instance" "ecs_2" {
   key_pair = "KeyPair-rudometov"
   security_groups   = ["default", "arudometov-sg"]
   availability_zone = "ru-moscow-1a"
-  user_data = file("./dockerfront.sh")
+  user_data = templatefile("./dockerfront.sh", {backend_eip_id = sbercloud_vpc_eip.eip_1.address})
   system_disk_type = "SAS"
   system_disk_size = 40
 
