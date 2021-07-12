@@ -9,7 +9,6 @@ import (
 )
 
 const (
-	port     = ":8000"
 	database = "./photos.json"
 )
 
@@ -56,13 +55,6 @@ func main() {
 
 	logger = log.New(f, "prefix", log.LstdFlags)
 
-	port := ":8000"
-	if len(os.Args) == 1 {
-		logger.Print("no port arg, using default")
-	} else {
-		port = ":" + os.Args[1]
-	}
-
 	wsContainer := restful.NewContainer()
 	t := APIResource{}
 	t.RegisterTo(wsContainer)
@@ -80,8 +72,8 @@ func main() {
 	wsContainer.Filter(wsContainer.OPTIONSFilter)
 	wsContainer.Filter(CORSFilter)
 
-	logger.Print("start listening on localhost:" + port)
-	logger.Fatal(http.ListenAndServe(port, wsContainer))
+	logger.Print("start listening on localhost:80")
+    logger.Fatal(http.ListenAndServe(":80", wsContainer))
 }
 
 func CORSFilter(req *restful.Request, resp *restful.Response, chain *restful.FilterChain) {

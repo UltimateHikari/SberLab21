@@ -19,5 +19,11 @@ spec:
       containers:
       - name: front-pod
         image: ultimatehikari/sberlab_07_21:front
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 10
 
 
