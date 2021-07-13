@@ -38,13 +38,21 @@ resource "sbercloud_nat_dnat_rule" "dnat_11251" {
   external_service_port = 11251
 }
 
-resource "sbercloud_nat_dnat_rule" "dnat_30881" {
+resource "sbercloud_nat_dnat_rule" "dnat_front" {
   floating_ip_id        = sbercloud_vpc_eip.eip_1.id
   nat_gateway_id        = sbercloud_nat_gateway.nat_1.id
   private_ip            = sbercloud_compute_instance.ecs_1.access_ip_v4
   protocol              = "tcp"
   internal_service_port = 30881
-  external_service_port = 30881
+  external_service_port = 80
 }
 
+resource "sbercloud_nat_dnat_rule" "dnat_api" {
+  floating_ip_id        = sbercloud_vpc_eip.eip_1.id
+  nat_gateway_id        = sbercloud_nat_gateway.nat_1.id
+  private_ip            = sbercloud_compute_instance.ecs_1.access_ip_v4
+  protocol              = "tcp"
+  internal_service_port = 30800
+  external_service_port = 30800
+}
 

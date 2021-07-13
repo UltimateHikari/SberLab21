@@ -3,7 +3,7 @@ pkg/
 bin/
 ./bin
 ./bin/*
-terraform/*terraform*
+*terraform.tfstate*
 *node_modules*
 
 *.DS_Store

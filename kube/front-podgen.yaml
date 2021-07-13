@@ -8,3 +8,6 @@ spec:
   containers:
     - name: hikarifront
       image: ultimatehikari/sberlab_07_21:front
+      env:
+      - name: VUE_APP_ROOT_API
+        value: "37.230.195.213:30800"

@@ -36,6 +36,12 @@ locals {
       port = 6443,
       source = "0.0.0.0/0"
     }
+    nodeport = {
+      description = "nodeport service",
+      protocol = "tcp",
+      port = 30881,
+      source = "0.0.0.0/0"
+    }
   }
 }
 
