@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -9,6 +10,7 @@ import (
 )
 
 const (
+	domain   = "fileservice/db/"
 	database = "./photos.json"
 )
 
@@ -104,7 +106,17 @@ func (p *APIResource) getList(req *restful.Request, resp *restful.Response) {
 func (p *APIResource) getPhoto(req *restful.Request, resp *restful.Response) {
 	id := req.PathParameter("id")
 	logger.Print("req for " + id)
-	resp.WriteEntity("kinda photo")
+	photo, err := http.Get(domain + id)
+	if err != nil {
+		logger.Print(err)
+		return
+	}
+	data, err := ioutil.ReadAll(photo.Body)
+	if err != nil {
+		logger.Print(err)
+		return
+	}
+	resp.WriteEntity(data)
 }
 
 func (p *HealthResource) returnOK(req *restful.Request, resp *restful.Response) {
