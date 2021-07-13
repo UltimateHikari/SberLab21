@@ -19,8 +19,12 @@ spec:
       containers:
       - name: front-pod
         image: ultimatehikari/sberlab_07_21:front
+        imagePullPolicy: Always
         ports:
           - containerPort: 80
+        env:
+        - name: VUE_APP_ROOT_API
+          value: 37.230.195.213:30800
         livenessProbe:
           httpGet:
             path: /health

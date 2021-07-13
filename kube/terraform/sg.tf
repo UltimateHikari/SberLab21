@@ -39,6 +39,12 @@ locals {
     nodeport = {
       description = "nodeport service",
       protocol = "tcp",
+      port = 30800,
+      source = "0.0.0.0/0"
+    },
+    nodeport-front = {
+      description = "nodeport service for front",
+      protocol = "tcp",
       port = 30881,
       source = "0.0.0.0/0"
     }

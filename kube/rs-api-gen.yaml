@@ -19,6 +19,7 @@ spec:
       containers:
       - name: api-pod
         image: ultimatehikari/sberlab_07_21:apiserver
+        imagePullPolicy: Always
         ports:
           - containerPort: 80
         livenessProbe:

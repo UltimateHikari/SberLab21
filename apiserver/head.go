@@ -18,10 +18,14 @@ type APIResource struct{}
 type HealthResource struct{}
 
 func (p HealthResource) RegisterTo(container *restful.Container) {
-    ws := new(restful.WebService)
-    ws.Route(ws.GET("/health").To(p.returnOK).
-        Doc("healthcheck endpoint for kube"))
-    container.Add(ws)
+	ws := new(restful.WebService)
+	ws.Path("/")
+	ws.Consumes(restful.MIME_JSON)
+	ws.Produces(restful.MIME_JSON)
+
+	ws.Route(ws.GET("health").To(p.returnOK).
+		Doc("healthcheck endpoint for kube"))
+	container.Add(ws)
 }
 
 func (p APIResource) RegisterTo(container *restful.Container) {
@@ -66,8 +70,8 @@ func main() {
 	wsContainer := restful.NewContainer()
 	t := APIResource{}
 	t.RegisterTo(wsContainer)
-    h := HealthResource{}
-    h.RegisterTo(wsContainer)
+	h := HealthResource{}
+	h.RegisterTo(wsContainer)
 
 	// Add container filter to enable CORS
 	cors := restful.CrossOriginResourceSharing{
@@ -83,7 +87,7 @@ func main() {
 	wsContainer.Filter(CORSFilter)
 
 	logger.Print("start listening on localhost:80")
-    logger.Fatal(http.ListenAndServe(":80", wsContainer))
+	logger.Fatal(http.ListenAndServe(":80", wsContainer))
 }
 
 func CORSFilter(req *restful.Request, resp *restful.Response, chain *restful.FilterChain) {
@@ -104,6 +108,6 @@ func (p *APIResource) getPhoto(req *restful.Request, resp *restful.Response) {
 }
 
 func (p *HealthResource) returnOK(req *restful.Request, resp *restful.Response) {
-    logger.Print("healthcheck")
-    resp.WriteEntity("OK")
+	logger.Print("healthcheck")
+	resp.WriteEntity("OK")
 }
