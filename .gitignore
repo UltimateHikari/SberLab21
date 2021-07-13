@@ -19,6 +19,7 @@ bin/
 *yarn-debug.log*
 *yarn-error.log*
 *pnpm-debug.log*
+*text.log
 
 # Editor directories and files
 .idea

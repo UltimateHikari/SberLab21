@@ -1,23 +1,60 @@
 package main
 
 import (
+	"encoding/json"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 
 	restful "github.com/emicklei/go-restful/v3"
 )
 
 const (
-	port     = ":8020"
-	database = "./photos.json"
+	port     = ":80"
+	prefix   = "./resources/thumbnails/"
+	database = "./resources/photos.json"
 )
 
+var logger *log.Logger
+
 type APIResource struct{}
+type HealthResource struct{}
+
+type Source struct {
+	Name string
+	Url  string
+}
+
+type Photographer struct {
+	Name string
+	Url  string
+}
+
+type PhotoEntry struct {
+	Id           int
+	Title        string
+	Filename     string
+	Location     string
+	Source       Source       `json:"Source"`
+	Photographer Photographer `json:"Photographer"`
+}
+
+func (p HealthResource) RegisterTo(container *restful.Container) {
+	ws := new(restful.WebService)
+	ws.Path("/")
+	ws.Consumes(restful.MIME_JSON)
+	ws.Produces(restful.MIME_JSON)
+
+	ws.Route(ws.GET("health").To(p.returnOK).
+		Doc("healthcheck endpoint for kube"))
+	container.Add(ws)
+}
 
 func (p APIResource) RegisterTo(container *restful.Container) {
 	ws := new(restful.WebService)
-	ws.Path("")
+	ws.Path("/db")
 	ws.Consumes(restful.MIME_JSON)
 	ws.Produces("image/jpeg")
 
@@ -42,16 +79,20 @@ func (p APIResource) RegisterTo(container *restful.Container) {
 }
 
 func main() {
-	port := ":8000"
-	if len(os.Args) == 1 {
-		log.Print("no port arg, using default")
-	} else {
-		port = ":" + os.Args[1]
+	f, err := os.OpenFile("text.log",
+		os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		log.Println(err)
 	}
+	defer f.Close()
+
+	logger = log.New(f, "prefix", log.LstdFlags)
 
 	wsContainer := restful.NewContainer()
 	t := APIResource{}
 	t.RegisterTo(wsContainer)
+	h := HealthResource{}
+	h.RegisterTo(wsContainer)
 
 	// Add container filter to enable CORS
 	cors := restful.CrossOriginResourceSharing{
@@ -66,8 +107,8 @@ func main() {
 	wsContainer.Filter(wsContainer.OPTIONSFilter)
 	wsContainer.Filter(CORSFilter)
 
-	log.Print("start listening on localhost:" + port)
-	log.Fatal(http.ListenAndServe(port, wsContainer))
+	logger.Print("start listening on localhost:" + port)
+	logger.Fatal(http.ListenAndServe(port, wsContainer))
 }
 
 func CORSFilter(req *restful.Request, resp *restful.Response, chain *restful.FilterChain) {
@@ -77,5 +118,25 @@ func CORSFilter(req *restful.Request, resp *restful.Response, chain *restful.Fil
 
 func (p *APIResource) getPhoto(req *restful.Request, resp *restful.Response) {
 	id := req.PathParameter("id")
-	log.Print("req for " + id)
+	logger.Print("req for " + id)
+	data, err := ioutil.ReadFile(database)
+	if err != nil {
+		logger.Print(err)
+		return
+	}
+	var photos []PhotoEntry
+	err = json.Unmarshal(data, &photos)
+	if err != nil {
+		logger.Print(err)
+		return
+	}
+	idInt, _ := strconv.Atoi(id)
+	location := prefix + photos[idInt].Filename
+	logger.Print(location)
+	http.ServeFile(resp.ResponseWriter, req.Request, location)
+}
+
+func (p *HealthResource) returnOK(req *restful.Request, resp *restful.Response) {
+	logger.Print("healthcheck")
+	resp.WriteEntity("OK")
 }
