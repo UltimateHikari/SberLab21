@@ -64,6 +64,9 @@ func (p APIResource) RegisterTo(container *restful.Container) {
 		Doc("get the photo by its id").
 		Param(ws.PathParameter("id", "identifier of photo").DataType("integer")))
 
+	ws.Route(ws.GET("/list").To(p.getList).
+		Doc("get all metadata"))
+
 	// ws.Route(ws.POST("/").To(p.addToDo).
 	// 	Doc("update or create a product").
 	// 	Param(ws.BodyParameter("ToDo", "a ToDo (JSON)").DataType("main.ToDo")))
@@ -116,6 +119,9 @@ func main() {
 func CORSFilter(req *restful.Request, resp *restful.Response, chain *restful.FilterChain) {
 	resp.AddHeader(restful.HEADER_AccessControlAllowOrigin, "*")
 	chain.ProcessFilter(req, resp)
+}
+func (p *APIResource) getList(req *restful.Request, resp *restful.Response) {
+	http.ServeFile(resp.ResponseWriter, req.Request, database)
 }
 
 func (p *APIResource) getPhoto(req *restful.Request, resp *restful.Response) {

@@ -10,9 +10,8 @@ import (
 )
 
 const (
-	port     = ":80"
-	domain   = "http://fileservice/db/"
-	database = "./photos.json"
+	port   = ":80"
+	domain = "http://fileservice/db/"
 )
 
 var logger *log.Logger
@@ -38,7 +37,7 @@ func (p APIResource) RegisterTo(container *restful.Container) {
 	ws.Produces(restful.MIME_JSON, "image/jpeg")
 
 	ws.Route(ws.GET("/list").To(p.getList).
-		Doc("get all todos"))
+		Doc("get all metadata"))
 
 	ws.Route(ws.GET("/{id}").To(p.getPhoto).
 		Doc("get the product by its id").
@@ -99,9 +98,24 @@ func CORSFilter(req *restful.Request, resp *restful.Response, chain *restful.Fil
 }
 
 func (p *APIResource) getList(req *restful.Request, resp *restful.Response) {
-	//dummy, change to database server
+
 	logger.Print("getting list")
-	http.ServeFile(resp.ResponseWriter, req.Request, database)
+	list, err := http.Get(domain + "list")
+	if err != nil {
+		logger.Print(err)
+		return
+	}
+
+	defer list.Body.Close()
+
+	data, err := ioutil.ReadAll(list.Body)
+	if err != nil {
+		logger.Print(err)
+		return
+	}
+
+	resp.Header().Set("content-type", restful.MIME_JSON)
+	resp.Write(data)
 }
 
 func (p *APIResource) getPhoto(req *restful.Request, resp *restful.Response) {
