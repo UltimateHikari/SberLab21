@@ -7,6 +7,7 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
+	"strconv"
 
 	"github.com/anthonynsimon/bild/effect"
 	"github.com/anthonynsimon/bild/imgio"
@@ -18,6 +19,7 @@ import (
 const (
 	port       = ":80"
 	out_suffix = "_out.jpg"
+	domain     = "http://fileservice/db/"
 )
 
 var logger *log.Logger
@@ -103,23 +105,24 @@ func CORSFilter(req *restful.Request, resp *restful.Response, chain *restful.Fil
 }
 
 func (p *EffectResource) randomEffect(req *restful.Request, resp *restful.Response) {
-	id := req.PathParameter("id")
-	logger.Print("req for effect for " + id)
+	logger.Print("req for effect for")
 	imageUuid := uuid.NewString()
 	logger.Print("spawning " + imageUuid + " guy")
 
-	fetchImage(id, imageUuid)
+	fetchImage(imageUuid)
 	process(imageUuid)
 
 	http.ServeFile(resp.ResponseWriter, req.Request, imageUuid+out_suffix)
 }
 
-func fetchImage(id string, imageUuid string) {
-	original, err := os.Open("input.jpg")
+func fetchImage(imageUuid string) {
+	photo, err := http.Get(domain + strconv.Itoa(rand.Intn(9)))
+	logger.Print(domain + strconv.Itoa(rand.Intn(9)))
 	if err != nil {
 		logger.Print(err)
+		return
 	}
-	defer original.Close()
+	defer photo.Body.Close()
 
 	new, err := os.Create(imageUuid + ".jpg")
 	if err != nil {
@@ -128,7 +131,7 @@ func fetchImage(id string, imageUuid string) {
 	defer new.Close()
 
 	//This will copy
-	_, ok := io.Copy(new, original)
+	_, ok := io.Copy(new, photo.Body)
 	if ok != nil {
 		logger.Print(err)
 	}
