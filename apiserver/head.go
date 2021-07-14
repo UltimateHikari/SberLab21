@@ -10,8 +10,8 @@ import (
 )
 
 const (
-    port = ":8000"
-	domain   = "fileservice/db/"
+	port     = ":80"
+	domain   = "http://fileservice/db/"
 	database = "./photos.json"
 )
 
@@ -34,7 +34,7 @@ func (p HealthResource) RegisterTo(container *restful.Container) {
 func (p APIResource) RegisterTo(container *restful.Container) {
 	ws := new(restful.WebService)
 	ws.Path("/photos")
-	ws.Consumes(restful.MIME_JSON)
+	ws.Consumes(restful.MIME_JSON, "image/jpeg")
 	ws.Produces(restful.MIME_JSON, "image/jpeg")
 
 	ws.Route(ws.GET("/list").To(p.getList).
@@ -106,12 +106,14 @@ func (p *APIResource) getList(req *restful.Request, resp *restful.Response) {
 
 func (p *APIResource) getPhoto(req *restful.Request, resp *restful.Response) {
 	id := req.PathParameter("id")
+	//logger.Print("got content-type from client:" + req.HeaderParameter("Content-Type"))
 	logger.Print("req for " + id)
 	photo, err := http.Get(domain + id)
 	if err != nil {
 		logger.Print(err)
 		return
 	}
+	//logger.Print("got content-type from fileserver:" + photo.Header.Get("Content-Type"))
 
 	defer photo.Body.Close()
 
@@ -120,7 +122,10 @@ func (p *APIResource) getPhoto(req *restful.Request, resp *restful.Response) {
 		logger.Print(err)
 		return
 	}
-	resp.WriteEntity(data)
+	//logger.Print("header was " + strings.Join(resp.Header().Values("Content-Type"), " "))
+	resp.Header().Set("content-type", "image/jpeg")
+	//logger.Print("header now " + strings.Join(resp.Header().Values("Content-Type"), " "))
+	resp.Write(data)
 }
 
 func (p *HealthResource) returnOK(req *restful.Request, resp *restful.Response) {

@@ -30,3 +30,6 @@ prefix2021/07/14 11:14:12 req for 7
 prefix2021/07/14 11:14:12 Get "fileservice/db/7": unsupported protocol scheme ""
 prefix2021/07/14 11:14:12 req for 8
 prefix2021/07/14 11:14:12 Get "fileservice/db/8": unsupported protocol scheme ""
+prefix2021/07/14 11:37:17 start listening on localhost:8000
+prefix2021/07/14 11:37:44 req for 1
+prefix2021/07/14 11:37:44 Get "http://fileservice/db/1": dial tcp: lookup fileservice: no such host
