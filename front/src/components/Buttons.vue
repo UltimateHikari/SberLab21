@@ -1,7 +1,9 @@
 <template>
   <div class="panel">
     <button class="create"> Create </button>
-    <button class="magic"> Magic! </button>
+    <router-link :to="`/photo/random?preventcaching=${Math.floor(Math.random() * 100000)}`">
+      <button class="magic"> Magic! </button>
+    </router-link>
   </div>
 </template>
 

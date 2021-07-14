@@ -10,8 +10,9 @@ import (
 )
 
 const (
-	port   = ":80"
-	domain = "http://fileservice/db/"
+	port           = ":80"
+	domain         = "http://fileservice/db/"
+	effectEndpoint = "http://effectservice/effect/random"
 )
 
 var logger *log.Logger
@@ -38,6 +39,9 @@ func (p APIResource) RegisterTo(container *restful.Container) {
 
 	ws.Route(ws.GET("/list").To(p.getList).
 		Doc("get all metadata"))
+
+	ws.Route(ws.GET("/random").To(p.getRandom).
+		Doc("get random mutation"))
 
 	ws.Route(ws.GET("/{id}").To(p.getPhoto).
 		Doc("get the product by its id").
@@ -120,14 +124,22 @@ func (p *APIResource) getList(req *restful.Request, resp *restful.Response) {
 
 func (p *APIResource) getPhoto(req *restful.Request, resp *restful.Response) {
 	id := req.PathParameter("id")
-	//logger.Print("got content-type from client:" + req.HeaderParameter("Content-Type"))
 	logger.Print("req for " + id)
-	photo, err := http.Get(domain + id)
+	p.forwardPhoto(req, resp, domain+id)
+}
+
+func (p *APIResource) getRandom(req *restful.Request, resp *restful.Response) {
+	logger.Print("random effect")
+	p.forwardPhoto(req, resp, effectEndpoint)
+}
+
+func (p *APIResource) forwardPhoto(req *restful.Request, resp *restful.Response, endpoint string) {
+
+	photo, err := http.Get(endpoint)
 	if err != nil {
 		logger.Print(err)
 		return
 	}
-	//logger.Print("got content-type from fileserver:" + photo.Header.Get("Content-Type"))
 
 	defer photo.Body.Close()
 
@@ -136,9 +148,7 @@ func (p *APIResource) getPhoto(req *restful.Request, resp *restful.Response) {
 		logger.Print(err)
 		return
 	}
-	//logger.Print("header was " + strings.Join(resp.Header().Values("Content-Type"), " "))
 	resp.Header().Set("content-type", "image/jpeg")
-	//logger.Print("header now " + strings.Join(resp.Header().Values("Content-Type"), " "))
 	resp.Write(data)
 }
 

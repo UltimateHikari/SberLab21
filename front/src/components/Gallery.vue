@@ -39,7 +39,6 @@ export default {
       var location = apiurl + id;
       console.log("pulling photo from " + location);
       return location;
-      //return require(`../assets/images/thumbnails/${filename}`);
     },
   },
 };
