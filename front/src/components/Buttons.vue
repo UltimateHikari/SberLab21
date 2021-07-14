@@ -1,7 +1,7 @@
 <template>
   <div class="panel">
     <button class="create"> Create </button>
-    <router-link :to="`/photo/random?preventcaching=${Math.floor(Math.random() * 100000)}`">
+    <router-link :to="`/photo/random?q=${Math.floor(Math.random()*10000)}`">
       <button class="magic"> Magic! </button>
     </router-link>
   </div>

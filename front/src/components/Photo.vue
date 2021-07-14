@@ -14,6 +14,12 @@ import apiurl from "@/path.js"
 
 export default {
   name: 'Photo',
+  props: {
+    query: {
+      type: Number,
+      default: 1000
+    }
+  },
   data() {
     return {
       
@@ -28,7 +34,9 @@ export default {
   },
   methods: {
     photoUrl(id) {
-      var location = apiurl + id;
+      console.log(this.$route.query.q);
+      console.log("query: " + this.query + "|");
+      var location = apiurl + id + "?q=" + this.$route.query.q;
       console.log("pulling photo from " + location);
       return location;
     },

@@ -13,7 +13,8 @@ const routeInfos = [
         path : "/photo/:id",
         name: "Photo",
         component: Photo,
-    }
+        props: route => ({ query: route.query.q })
+    },
 ]
 
 const router = createRouter({
