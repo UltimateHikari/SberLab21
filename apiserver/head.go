@@ -10,6 +10,7 @@ import (
 )
 
 const (
+    port = ":8000"
 	domain   = "fileservice/db/"
 	database = "./photos.json"
 )
@@ -88,8 +89,8 @@ func main() {
 	wsContainer.Filter(wsContainer.OPTIONSFilter)
 	wsContainer.Filter(CORSFilter)
 
-	logger.Print("start listening on localhost:80")
-	logger.Fatal(http.ListenAndServe(":80", wsContainer))
+	logger.Print("start listening on localhost" + port)
+	logger.Fatal(http.ListenAndServe(port, wsContainer))
 }
 
 func CORSFilter(req *restful.Request, resp *restful.Response, chain *restful.FilterChain) {
@@ -111,6 +112,9 @@ func (p *APIResource) getPhoto(req *restful.Request, resp *restful.Response) {
 		logger.Print(err)
 		return
 	}
+
+	defer photo.Body.Close()
+
 	data, err := ioutil.ReadAll(photo.Body)
 	if err != nil {
 		logger.Print(err)

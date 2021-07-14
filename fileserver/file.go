@@ -12,9 +12,11 @@ import (
 )
 
 const (
-	port     = ":80"
-	prefix   = "./resources/thumbnails/"
-	database = "./resources/photos.json"
+	port           = ":80"
+	prefix_debug   = "./resources/thumbnails/"
+	database_debug = "./resources/photos.json"
+	prefix         = "./thumbnails/"
+	database       = "./photos.json"
 )
 
 var logger *log.Logger

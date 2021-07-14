@@ -1,6 +1,6 @@
 <template>
   <div class="lightbox" @click.self="close">    
-  <img :src="photoUrl(this.$route.params.filename)">    
+  <img :src="photoUrl(this.$route.params.id)">    
     <div class="lightbox-info">
       <div class="lightbox-info-inner">
         Info
@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import apiurl from "@/path.js"
 
 export default {
   name: 'Photo',
@@ -26,8 +27,11 @@ export default {
     },
   },
   methods: {
-    photoUrl(filename) {
-      return require(`../assets/images/thumbnails/${filename}`);
+    photoUrl(id) {
+      var location = apiurl + id;
+      console.log("pulling photo from " + location);
+      return location;
+      //return require(`../assets/images/thumbnails/${filename}`);
     },
     close(){
         this.$router.push("/")

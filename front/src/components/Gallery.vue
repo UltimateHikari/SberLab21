@@ -3,8 +3,8 @@
     <div class="gallery-panel"
          v-for="photo in photos"
          :key="photo.id">
-      <router-link :to="`/photo/${photo.filename}`">
-        <img :src="thumbUrl(photo.filename)">
+      <router-link :to="`/photo/${photo.id}`">
+        <img :src="thumbUrl(photo.id)">
       </router-link>
     </div>
   </div>
@@ -12,9 +12,10 @@
 
 <script>
 import axios from "axios";
+import apiurl from "@/path.js"
 
 const axios_instance = axios.create({
-  baseURL: "http://" + process.env.VUE_APP_ROOT_API + "/photos/list",
+  baseURL: apiurl + "list",
 })
 
 export default {
@@ -25,6 +26,7 @@ export default {
     };
   },
   created() {
+    console.log("get to " + apiurl + "list")
     axios_instance.get().then((result) => {
       this.photos = result.data;
     }, error => {
@@ -33,8 +35,11 @@ export default {
   },
 
   methods: {
-    thumbUrl(filename) {
-      return require(`../assets/images/thumbnails/${filename}`);
+    thumbUrl(id) {
+      var location = apiurl + id;
+      console.log("pulling photo from " + location);
+      return location;
+      //return require(`../assets/images/thumbnails/${filename}`);
     },
   },
 };
