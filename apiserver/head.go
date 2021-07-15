@@ -12,7 +12,11 @@ import (
 const (
 	port           = ":80"
 	domain         = "http://fileservice/db/"
+	uploadPath     = "upload"
 	effectEndpoint = "http://effectservice/effect/random"
+	MIME_IMG       = "image/jpeg"
+	MIME_MULTIPART = "multipart/form-data"
+	logfile        = "text.log"
 )
 
 var logger *log.Logger
@@ -34,8 +38,8 @@ func (p HealthResource) RegisterTo(container *restful.Container) {
 func (p APIResource) RegisterTo(container *restful.Container) {
 	ws := new(restful.WebService)
 	ws.Path("/photos")
-	ws.Consumes(restful.MIME_JSON, "image/jpeg")
-	ws.Produces(restful.MIME_JSON, "image/jpeg")
+	ws.Consumes(restful.MIME_JSON, MIME_IMG, MIME_MULTIPART)
+	ws.Produces(restful.MIME_JSON, MIME_IMG)
 
 	ws.Route(ws.GET("/list").To(p.getList).
 		Doc("get all metadata"))
@@ -47,9 +51,8 @@ func (p APIResource) RegisterTo(container *restful.Container) {
 		Doc("get the product by its id").
 		Param(ws.PathParameter("id", "identifier of the product").DataType("integer")))
 
-	// ws.Route(ws.POST("/").To(p.addToDo).
-	// 	Doc("update or create a product").
-	// 	Param(ws.BodyParameter("ToDo", "a ToDo (JSON)").DataType("main.ToDo")))
+	ws.Route(ws.POST("/upload").To(p.addPhoto).
+		Doc("create a photo"))
 
 	// ws.Route(ws.PUT("/{id}").To(p.updateTodo).
 	// 	Doc("get the product by its id").
@@ -64,7 +67,7 @@ func (p APIResource) RegisterTo(container *restful.Container) {
 }
 
 func main() {
-	f, err := os.OpenFile("text.log",
+	f, err := os.OpenFile(logfile,
 		os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		log.Println(err)
@@ -122,6 +125,25 @@ func (p *APIResource) getList(req *restful.Request, resp *restful.Response) {
 	resp.Write(data)
 }
 
+func (p *APIResource) addPhoto(req *restful.Request, resp *restful.Response) {
+	//forward to fileservice a then parse there with bodyparams?
+	logger.Print("uploading a photo...")
+	defer req.Request.Body.Close()
+	dbresp, err := http.Post(domain+uploadPath, MIME_IMG, req.Request.Body)
+	if err != nil {
+		logger.Print(err)
+		return
+	}
+	data, err := ioutil.ReadAll(dbresp.Body)
+	if err != nil {
+		logger.Print(err)
+		return
+	}
+	//resp.Header(). = req.Request.Header()
+	resp.Write(data)
+	logger.Print("upload success!")
+}
+
 func (p *APIResource) getPhoto(req *restful.Request, resp *restful.Response) {
 	id := req.PathParameter("id")
 	logger.Print("req for " + id)
@@ -148,7 +170,7 @@ func (p *APIResource) forwardPhoto(req *restful.Request, resp *restful.Response,
 		logger.Print(err)
 		return
 	}
-	resp.Header().Set("content-type", "image/jpeg")
+	resp.Header().Set("content-type", MIME_IMG)
 	resp.Write(data)
 }
 

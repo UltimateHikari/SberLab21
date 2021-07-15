@@ -67,18 +67,8 @@ func (p APIResource) RegisterTo(container *restful.Container) {
 	ws.Route(ws.GET("/list").To(p.getList).
 		Doc("get all metadata"))
 
-	// ws.Route(ws.POST("/").To(p.addToDo).
-	// 	Doc("update or create a product").
-	// 	Param(ws.BodyParameter("ToDo", "a ToDo (JSON)").DataType("main.ToDo")))
-
-	// ws.Route(ws.PUT("/{id}").To(p.updateTodo).
-	// 	Doc("get the product by its id").
-	// 	Param(ws.PathParameter("id", "identifier of the product").DataType("integer")).
-	// 	Param(ws.BodyParameter("ToDo", "a ToDo (JSON)").DataType("main.ToDo")))
-
-	// ws.Route(ws.DELETE("/{id}").To(p.deleteTodo).
-	// 	Doc("update or create a product").
-	//Param(ws.PathParameter("id", "identifier of the product").DataType("integer")))
+	ws.Route(ws.POST("/upload").To(p.addPhoto).
+		Doc("create a photo"))
 
 	container.Add(ws)
 }
@@ -142,6 +132,55 @@ func (p *APIResource) getPhoto(req *restful.Request, resp *restful.Response) {
 	location := prefix + photos[idInt].Filename
 	logger.Print(location)
 	http.ServeFile(resp.ResponseWriter, req.Request, location)
+}
+
+func (p *APIResource) addPhoto(req *restful.Request, resp *restful.Response) {
+	logger.Print("got photo")
+	r := req.Request
+	err := r.ParseForm()
+	if err != nil {
+		logger.Print(err)
+		return
+	}
+	populateDb(r.PostForm.Get("name"), r.PostForm.Get("description"))
+	//r.PostForm.Get("file")
+}
+
+func populateDb(filename string, description string) {
+	logger.Print("populating..")
+	var db []PhotoEntry
+
+	data, err := ioutil.ReadFile(database)
+	if err != nil {
+		log.Print(err)
+		return
+	}
+	err = json.Unmarshal([]byte(data), &db)
+	if err != nil {
+		log.Print(err)
+		return
+	}
+	db = append(db, PhotoEntry{Id: len(db), Filename: filename, Location: description})
+	logger.Print("populated")
+	result, err := json.Marshal(db)
+	if err != nil {
+		log.Print(err)
+		return
+	}
+	f, err := os.Open(database)
+	if err != nil {
+		log.Print(err)
+		return
+	}
+	defer f.Close()
+
+	// write bytes to the file
+	_, err = f.Write(result)
+	if err != nil {
+		log.Print(err)
+		return
+	}
+	logger.Print("wrote")
 }
 
 func (p *HealthResource) returnOK(req *restful.Request, resp *restful.Response) {

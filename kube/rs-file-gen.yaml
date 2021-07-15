@@ -7,7 +7,7 @@ metadata:
     tier: file
 spec:
   # modify replicas according to your case
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       tier: file
