@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"image"
 	"io"
 	"log"
 	"math/rand"
@@ -34,14 +35,30 @@ func process(imageUuid string) {
 		return
 	}
 
-	inverted := effect.Invert(img)
-	resized := transform.Resize(inverted, 800, 800, transform.Linear)
+	firstmagic := applyEffect()(img)
+	secondmagic := applyEffect()(firstmagic)
+	resized := transform.Resize(secondmagic, 800, 800, transform.Linear)
 	rotated := transform.Rotate(resized, float64(rand.Intn(360)), nil)
 
 	if err := imgio.Save(imageUuid+out_suffix, rotated, imgio.JPEGEncoder(100)); err != nil {
 		fmt.Println(err)
 		return
 	}
+}
+
+func applyEffect() (f func(image image.Image) *image.RGBA) {
+	Functions := []func(image.Image) *image.RGBA{
+		effect.Invert,
+		effect.Emboss,
+		effect.Sepia,
+		effect.Sharpen,
+		effect.Sobel,
+		MDilate,
+		MEdgeDetection,
+		MErode,
+		MMedian,
+	}
+	return Functions[rand.Intn(len(Functions))]
 }
 
 func (p HealthResource) RegisterTo(container *restful.Container) {
