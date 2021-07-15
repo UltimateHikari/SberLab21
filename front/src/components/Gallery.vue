@@ -1,11 +1,13 @@
 <template>
-  <div class="gallery">
-    <div class="gallery-panel"
-         v-for="photo in photos"
-         :key="photo.id">
-      <router-link :to="`/photo/${photo.id}`">
-        <img :src="thumbUrl(photo.id)">
-      </router-link>
+  <div class="container mt-2">
+    <div class="gallery">
+      <div class="gallery-panel"
+          v-for="photo in photos"
+          :key="photo.id">
+        <router-link :to="`/photo/${photo.id}`">
+          <img :src="thumbUrl(photo.id)">
+        </router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -36,7 +38,7 @@ export default {
 
   methods: {
     thumbUrl(id) {
-      var location = apiurl + id;
+      var location = apiurl + id + ".jpg";
       console.log("pulling photo from " + location);
       return location;
     },
@@ -50,8 +52,8 @@ export default {
     grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
     grid-gap: 1rem;
     max-width: 80rem;
-    margin: 2rem auto;
-    padding: 0 5rem;
+    //margin: 2rem auto;
+    //padding: 0 5rem;
   }  
   .gallery-panel img {
     width: 100%;

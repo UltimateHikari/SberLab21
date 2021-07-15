@@ -43,7 +43,7 @@ func (p APIResource) RegisterTo(container *restful.Container) {
 	ws.Route(ws.GET("/random").To(p.getRandom).
 		Doc("get random mutation"))
 
-	ws.Route(ws.GET("/{id}").To(p.getPhoto).
+	ws.Route(ws.GET("/{id}.jpg").To(p.getPhoto).
 		Doc("get the product by its id").
 		Param(ws.PathParameter("id", "identifier of the product").DataType("integer")))
 

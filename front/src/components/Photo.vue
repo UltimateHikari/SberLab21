@@ -1,6 +1,13 @@
 <template>
-  <div class="lightbox" @click.self="close">    
-  <img :src="photoUrl(this.$route.params.id)">    
+  <div class="lightbox" @click.self="close">
+    <div v-if="this.loadingStatus" class='loading-div'>
+      <div class="spinner-border text-info m-5" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+    <div v-else >
+      <img :src="imgsrc">      
+    </div>
     <div class="lightbox-info">
       <div class="lightbox-info-inner">
         Info
@@ -22,7 +29,8 @@ export default {
   },
   data() {
     return {
-      
+      imgsrc: "",
+      loadingStatus: true,
     };
   },
   computed: {
@@ -32,11 +40,23 @@ export default {
       });
     },
   },
+  created() {
+    console.log(this.loadingStatus)
+
+    var myImage = new Image();
+    myImage.src = this.photoUrl(this.$route.query.q);
+    myImage.onload = () => {
+      console.log("loaded!")
+      this.imgsrc = myImage.src
+      this.loadingStatus = false;
+    }
+    
+  },
   methods: {
     photoUrl(id) {
-      console.log(this.$route.query.q);
+      console.log(this.$route.query.q + " ; " + id);
       console.log("query: " + this.query + "|");
-      var location = apiurl + id + "?q=" + this.$route.query.q;
+      var location = apiurl + id + ".jpg" + "?q=" + this.$route.query.q;
       console.log("pulling photo from " + location);
       return location;
     },
@@ -64,6 +84,11 @@ export default {
     width: 100%;
     grid-column-start: 2;
   }  
+  .loading-div {
+    margin: auto;
+    width: 100%;
+    grid-column-start: 2;
+  } 
   .lightbox-info {
     margin: auto 2rem auto 0;
   }  
