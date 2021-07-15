@@ -5,8 +5,8 @@
         <span class="sr-only">Loading...</span>
       </div>
     </div>
-    <div v-else >
-      <img :src="imgsrc">      
+    <div v-else class='loading-div'>
+      <img class="rounded" :src="imgsrc">      
     </div>
     <div class="lightbox-info">
       <div class="lightbox-info-inner">
@@ -44,7 +44,7 @@ export default {
     console.log(this.loadingStatus)
 
     var myImage = new Image();
-    myImage.src = this.photoUrl(this.$route.query.q);
+    myImage.src = this.photoUrl(this.$route.params.id);
     myImage.onload = () => {
       console.log("loaded!")
       this.imgsrc = myImage.src
@@ -78,11 +78,6 @@ export default {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 2rem;
-  }  
-  .lightbox img {
-    margin: auto;
-    width: 100%;
-    grid-column-start: 2;
   }  
   .loading-div {
     margin: auto;

@@ -40,7 +40,7 @@ func (p APIResource) RegisterTo(container *restful.Container) {
 	ws.Route(ws.GET("/list").To(p.getList).
 		Doc("get all metadata"))
 
-	ws.Route(ws.GET("/random").To(p.getRandom).
+	ws.Route(ws.GET("/random.jpg").To(p.getRandom).
 		Doc("get random mutation"))
 
 	ws.Route(ws.GET("/{id}.jpg").To(p.getPhoto).
