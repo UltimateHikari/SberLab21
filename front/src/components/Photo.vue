@@ -41,12 +41,10 @@ export default {
     },
   },
   created() {
-    console.log(this.loadingStatus)
 
     var myImage = new Image();
     myImage.src = this.photoUrl(this.$route.params.id);
     myImage.onload = () => {
-      console.log("loaded!")
       this.imgsrc = myImage.src
       this.loadingStatus = false;
     }
@@ -54,10 +52,8 @@ export default {
   },
   methods: {
     photoUrl(id) {
-      console.log(this.$route.query.q + " ; " + id);
-      console.log("query: " + this.query + "|");
       var location = apiurl + id + ".jpg" + "?q=" + this.$route.query.q;
-      console.log("pulling photo from " + location);
+      //console.log("pulling photo from " + location);
       return location;
     },
     close(){

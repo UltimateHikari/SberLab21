@@ -28,7 +28,6 @@ export default {
     };
   },
   created() {
-    console.log("get to " + apiurl + "list")
     axios_instance.get().then((result) => {
       this.photos = result.data;
     }, error => {
@@ -39,7 +38,7 @@ export default {
   methods: {
     thumbUrl(id) {
       var location = apiurl + id + ".jpg";
-      console.log("pulling photo from " + location);
+      //console.log("pulling photo from " + location);
       return location;
     },
   },
