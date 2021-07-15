@@ -19,6 +19,7 @@ import (
 
 const (
 	port       = ":80"
+	in_suffix  = ".jpg"
 	out_suffix = "_out.jpg"
 	domain     = "http://fileservice/db/"
 )
@@ -122,6 +123,7 @@ func CORSFilter(req *restful.Request, resp *restful.Response, chain *restful.Fil
 }
 
 func (p *EffectResource) randomEffect(req *restful.Request, resp *restful.Response) {
+	var err error
 	logger.Print("req for effect for")
 	imageUuid := uuid.NewString()
 	logger.Print("spawning " + imageUuid + " guy")
@@ -130,6 +132,14 @@ func (p *EffectResource) randomEffect(req *restful.Request, resp *restful.Respon
 	process(imageUuid)
 
 	http.ServeFile(resp.ResponseWriter, req.Request, imageUuid+out_suffix)
+	err = os.Remove(imageUuid + in_suffix)
+	if err != nil {
+		logger.Print(err)
+	}
+	err = os.Remove(imageUuid + out_suffix)
+	if err != nil {
+		logger.Print(err)
+	}
 }
 
 func fetchImage(imageUuid string) {
@@ -141,7 +151,7 @@ func fetchImage(imageUuid string) {
 	}
 	defer photo.Body.Close()
 
-	new, err := os.Create(imageUuid + ".jpg")
+	new, err := os.Create(imageUuid + in_suffix)
 	if err != nil {
 		logger.Print(err)
 	}
