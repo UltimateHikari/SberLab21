@@ -10,7 +10,8 @@
     </div>
     <div class="lightbox-info">
       <div class="lightbox-info-inner">
-        Info
+        <p>Magic is <s>friendship</s> two sequentially applied random image transformations and random rotation</p>
+        <p>However, EffectService would have elaborated on that in http response if he was able to</p>
       </div>
     </div>
   </div>
