@@ -165,6 +165,5 @@ func fetchImage(imageUuid string) {
 }
 
 func (p *HealthResource) returnOK(req *restful.Request, resp *restful.Response) {
-	logger.Print("healthcheck")
 	resp.WriteEntity("OK")
 }

@@ -175,6 +175,5 @@ func (p *APIResource) forwardPhoto(req *restful.Request, resp *restful.Response,
 }
 
 func (p *HealthResource) returnOK(req *restful.Request, resp *restful.Response) {
-	logger.Print("healthcheck")
 	resp.WriteEntity("OK")
 }
