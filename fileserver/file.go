@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -17,6 +18,7 @@ const (
 	database_debug = "./resources/photos.json"
 	prefix         = "./thumbnails/"
 	database       = "./photos.json"
+	MIME_MULTIPART = "multipart/form-data"
 )
 
 var logger *log.Logger
@@ -57,7 +59,7 @@ func (p HealthResource) RegisterTo(container *restful.Container) {
 func (p APIResource) RegisterTo(container *restful.Container) {
 	ws := new(restful.WebService)
 	ws.Path("/db")
-	ws.Consumes(restful.MIME_JSON)
+	ws.Consumes(restful.MIME_JSON, MIME_MULTIPART)
 	ws.Produces("image/jpeg")
 
 	ws.Route(ws.GET("/{id}").To(p.getPhoto).
@@ -137,12 +139,44 @@ func (p *APIResource) getPhoto(req *restful.Request, resp *restful.Response) {
 func (p *APIResource) addPhoto(req *restful.Request, resp *restful.Response) {
 	logger.Print("got photo")
 	r := req.Request
-	err := r.ParseForm()
+	err := r.ParseMultipartForm(32 << 20)
 	if err != nil {
 		logger.Print(err)
 		return
 	}
-	populateDb(r.PostForm.Get("name"), r.PostForm.Get("description"))
+	// Metadata
+	f, _, err := r.FormFile("description")
+	if err != nil {
+		logger.Printf("%s: %q", err, "description")
+	}
+	metadata, err := ioutil.ReadAll(f)
+	if err != nil {
+		logger.Print(err)
+
+	}
+	logger.Print("descr " + string(metadata))
+	fn, _, err := r.FormFile("name")
+	if err != nil {
+		logger.Printf("%s: %q", err, "name")
+	} else {
+		data, _ := ioutil.ReadAll(fn)
+		logger.Panicf("%q %s", "name is", string(data))
+	}
+	metaname, err := ioutil.ReadAll(fn)
+	if err != nil {
+		logger.Print(err)
+	}
+	logger.Print("name " + string(metaname))
+
+	// Media files
+	for _, h := range r.MultipartForm.File["file"] {
+		file, _ := h.Open()
+		tmpfile, _ := os.Create("./" + h.Filename)
+		io.Copy(tmpfile, file)
+		tmpfile.Close()
+		file.Close()
+	}
+	populateDb(r.PostForm.Get("name"), string(metadata))
 	//r.PostForm.Get("file")
 }
 
@@ -162,6 +196,7 @@ func populateDb(filename string, description string) {
 	}
 	db = append(db, PhotoEntry{Id: len(db), Filename: filename, Location: description})
 	logger.Print("populated")
+	logger.Print(db)
 	result, err := json.Marshal(db)
 	if err != nil {
 		log.Print(err)

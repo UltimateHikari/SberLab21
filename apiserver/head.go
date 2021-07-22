@@ -97,6 +97,7 @@ func main() {
 
 	logger.Print("start listening on localhost" + port)
 	logger.Fatal(http.ListenAndServe(port, wsContainer))
+
 }
 
 func CORSFilter(req *restful.Request, resp *restful.Response, chain *restful.FilterChain) {
@@ -129,7 +130,7 @@ func (p *APIResource) addPhoto(req *restful.Request, resp *restful.Response) {
 	//forward to fileservice a then parse there with bodyparams?
 	logger.Print("uploading a photo...")
 	defer req.Request.Body.Close()
-	dbresp, err := http.Post(domain+uploadPath, MIME_IMG, req.Request.Body)
+	dbresp, err := http.Post(domain+uploadPath, req.Request.Header.Get("content-type"), req.Request.Body)
 	if err != nil {
 		logger.Print(err)
 		return
@@ -139,7 +140,6 @@ func (p *APIResource) addPhoto(req *restful.Request, resp *restful.Response) {
 		logger.Print(err)
 		return
 	}
-	//resp.Header(). = req.Request.Header()
 	resp.Write(data)
 	logger.Print("upload success!")
 }

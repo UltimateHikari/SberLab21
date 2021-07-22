@@ -6,7 +6,7 @@ metadata:
     app: pcmgc
     tier: api
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       tier: api
@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: api-pod
-        image: ultimatehikari/pcmgc-apiserver:0.1
+        image: ultimatehikari/pcmgc-apiserver:0.2
         imagePullPolicy: Always
         ports:
           - containerPort: 80
