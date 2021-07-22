@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+ name: config-autoscaler
+ namespace: knative-serving
+data:
+ container-concurrency-target-default: "1"
+ container-concurrency-target-percentage: "1"
+ enable-scale-to-zero: "true"
+ max-scale-up-rate: "20"
+ scale-to-zero-grace-period: "30s"
+ scale-to-zero-pod-retention-period: "0s"
+ stable-window: "10s"
+
+

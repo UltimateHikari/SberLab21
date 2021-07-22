@@ -1,0 +1,4 @@
+### two ways of communicating with envoy:
+* bring kourier & metallb and go to external address from local network
+* bring only kourier and apply kourier-nodeport.yaml.
+still only getting 404 from envoy on 80 & connection refused of 443 in both cases
