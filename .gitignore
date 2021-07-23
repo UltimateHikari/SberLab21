@@ -30,3 +30,4 @@ bin/
 *.sln
 *.sw?
 
+*token*

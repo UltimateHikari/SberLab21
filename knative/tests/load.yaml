@@ -1,0 +1,19 @@
+overload:
+  enabled: true
+  package: yandextank.plugins.DataUploader
+  token_file: "token.txt"
+phantom:
+  address: 37.230.195.213:80
+  load_profile:
+    load_type: rps
+    schedule: line(1, 1000, 3m)
+  header_http: "1.1"
+  headers:
+    - "[Host: hello.default.37.230.195.213.nip.io]"
+    - "[Connection: close]"
+  uris:
+    - "/"
+console:
+  enabled: true
+telegraf:
+  enabled: false
