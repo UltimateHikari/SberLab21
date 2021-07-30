@@ -1,3 +1,5 @@
+### first educational version
+* on docker container and injections from terraform
 expects:
 * file ../keys with:
     access-key\nsecret-key
