@@ -1,0 +1,4 @@
+k exec -ti <name> -- <cmd>
+#ConfigMap
+kubectl create configmap cm-front-env --from-env-file='./front-env'
+kubectl get configmap cm-front-env -o yaml

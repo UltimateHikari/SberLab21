@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: frontend
+  labels:
+    app: hikarifront
+    tier: frontend
+spec:
+  # modify replicas according to your case
+  replicas: 2
+  selector:
+    matchLabels:
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        tier: frontend
+    spec:
+      containers:
+      - name: front-pod
+        image: ultimatehikari/sberlab_07_21:front
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 80
+        env:
+        - name: VUE_APP_ROOT_API
+          value: 37.230.195.213:30800
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 10

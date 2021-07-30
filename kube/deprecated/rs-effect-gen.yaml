@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: effend
+  labels:
+    app: hikarifront
+    tier: effect
+spec:
+  # modify replicas according to your case
+  replicas: 2
+  selector:
+    matchLabels:
+      tier: effect
+  template:
+    metadata:
+      labels:
+        tier: effect
+    spec:
+      containers:
+      - name: api-pod
+        image: ultimatehikari/sberlab_07_21:effectserver
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 10

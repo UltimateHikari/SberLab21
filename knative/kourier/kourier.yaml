@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"networking.knative.dev/ingress-provider":"kourier","serving.knative.dev/release":"v0.24.0"},"name":"kourier","namespace":"kourier-system"},"spec":{"ports":[{"name":"http2","port":80,"protocol":"TCP","targetPort":8080},{"name":"https","port":443,"protocol":"TCP","targetPort":8443}],"selector":{"app":"3scale-kourier-gateway"},"type":"LoadBalancer"}}
+  creationTimestamp: "2021-07-19T07:59:06Z"
+  labels:
+    networking.knative.dev/ingress-provider: kourier
+    serving.knative.dev/release: v0.24.0
+  name: kourier
+  namespace: kourier-system
+  resourceVersion: "1322116"
+  uid: f89b15bf-4a5f-4c4e-9257-c986197b4e7f
+spec:
+  clusterIP: 100.66.237.23
+  clusterIPs:
+  - 100.66.237.23
+  externalTrafficPolicy: Cluster
+  ports:
+  - name: http2
+    nodePort: 30786
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  - name: https
+    nodePort: 30238
+    port: 443
+    protocol: TCP
+    targetPort: 8443
+  selector:
+    app: 3scale-kourier-gateway
+  sessionAffinity: None
+  type: LoadBalancer
+status:
+  loadBalancer: {}

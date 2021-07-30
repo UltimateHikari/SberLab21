@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: filend
+  labels:
+    app: hikarifront
+    tier: file
+spec:
+  # modify replicas according to your case
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: file
+  template:
+    metadata:
+      labels:
+        tier: file
+    spec:
+      containers:
+      - name: api-pod
+        image: ultimatehikari/sberlab_07_21:fileserver
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 10

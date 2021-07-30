@@ -1,3 +1,35 @@
-prefix2021/07/11 20:02:36 start listening on localhost::8000
-prefix2021/07/11 20:02:43 getting list
-prefix2021/07/11 20:02:47 req for 1
+prefix2021/07/13 14:07:32 start listening on localhost:80
+prefix2021/07/13 14:07:32 listen tcp :8000: bind: address already in use
+prefix2021/07/13 14:08:07 start listening on localhost:80
+prefix2021/07/13 14:08:18 getting list
+prefix2021/07/13 14:08:24 getting list
+prefix2021/07/13 14:08:59 getting list
+prefix2021/07/13 14:09:04 healthcheck
+prefix2021/07/14 11:12:28 start listening on localhost:8000
+prefix2021/07/14 11:12:32 getting list
+prefix2021/07/14 11:13:09 getting list
+prefix2021/07/14 11:13:11 req for 1
+prefix2021/07/14 11:13:11 Get "fileservice/db/1": unsupported protocol scheme ""
+prefix2021/07/14 11:14:06 start listening on localhost:8000
+prefix2021/07/14 11:14:12 getting list
+prefix2021/07/14 11:14:12 req for 0
+prefix2021/07/14 11:14:12 Get "fileservice/db/0": unsupported protocol scheme ""
+prefix2021/07/14 11:14:12 req for 1
+prefix2021/07/14 11:14:12 Get "fileservice/db/1": unsupported protocol scheme ""
+prefix2021/07/14 11:14:12 req for 2
+prefix2021/07/14 11:14:12 Get "fileservice/db/2": unsupported protocol scheme ""
+prefix2021/07/14 11:14:12 req for 3
+prefix2021/07/14 11:14:12 Get "fileservice/db/3": unsupported protocol scheme ""
+prefix2021/07/14 11:14:12 req for 4
+prefix2021/07/14 11:14:12 Get "fileservice/db/4": unsupported protocol scheme ""
+prefix2021/07/14 11:14:12 req for 5
+prefix2021/07/14 11:14:12 Get "fileservice/db/5": unsupported protocol scheme ""
+prefix2021/07/14 11:14:12 req for 6
+prefix2021/07/14 11:14:12 Get "fileservice/db/6": unsupported protocol scheme ""
+prefix2021/07/14 11:14:12 req for 7
+prefix2021/07/14 11:14:12 Get "fileservice/db/7": unsupported protocol scheme ""
+prefix2021/07/14 11:14:12 req for 8
+prefix2021/07/14 11:14:12 Get "fileservice/db/8": unsupported protocol scheme ""
+prefix2021/07/14 11:37:17 start listening on localhost:8000
+prefix2021/07/14 11:37:44 req for 1
+prefix2021/07/14 11:37:44 Get "http://fileservice/db/1": dial tcp: lookup fileservice: no such host

@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: file
+  labels:
+    app: pcmgc
+    tier: file
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: file
+  template:
+    metadata:
+      labels:
+        tier: file
+    spec:
+      containers:
+      - name: file-pod
+        image: ultimatehikari/pcmgc-fileserver:0.1
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 10
+            #        volumeMounts:
+            #- name: nfs
+            #mountPath: "/resources"
+            # volumes:
+            # - name: nfs
+        #persistentVolumeClaim:
+        #claimName: nfs

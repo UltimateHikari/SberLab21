@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: effect
+  labels:
+    app: pcmgc
+    tier: effect
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      tier: effect
+  template:
+    metadata:
+      labels:
+        tier: effect
+    spec:
+      containers:
+      - name: eff-pod
+        image: ultimatehikari/pcmgc-effect:0.1
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 10

@@ -3,7 +3,7 @@ pkg/
 bin/
 ./bin
 ./bin/*
-terraform/*terraform*
+*terraform.tfstate*
 *node_modules*
 
 *.DS_Store
@@ -19,6 +19,7 @@ terraform/*terraform*
 *yarn-debug.log*
 *yarn-error.log*
 *pnpm-debug.log*
+*text.log
 
 # Editor directories and files
 .idea
@@ -29,3 +30,4 @@ terraform/*terraform*
 *.sln
 *.sw?
 
+*token*
