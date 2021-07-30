@@ -4,10 +4,9 @@ import (
 	"fmt"
 	"math"
 	"math/rand"
-	"net/http"
 )
 
-const param = 10000000
+const param = 100000
 
 func load() (res float64) {
 	var a [param]float64
@@ -20,13 +19,7 @@ func load() (res float64) {
 	return res
 }
 
-func welcome(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, load())
-}
-
 func main() {
-	http.HandleFunc("/", welcome)
-
-	http.ListenAndServe(":8080", nil)
+	fmt.Print(load())
 	return
 }

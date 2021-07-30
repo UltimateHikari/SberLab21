@@ -1,0 +1,24 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: load
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/scaleDownDelay: "0s"
+    spec:
+      containerConcurrency: 1
+      containers:
+        - image: ultimatehikari/knative-goload:1.0
+          ports:
+            - containerPort: 8080
+          env:
+            - name: TARGET
+              value: "NotKnative"
+  traffic:
+  - latestRevision: true
+    percent: 90
+  - revisionName: load-00001
+    percent: 10
+

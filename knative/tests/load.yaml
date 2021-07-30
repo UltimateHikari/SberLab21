@@ -6,10 +6,10 @@ phantom:
   address: 37.230.195.213:80
   load_profile:
     load_type: rps
-    schedule: line(1, 1000, 3m)
+    schedule: const(1000,30) line(1000, 1, 30)
   header_http: "1.1"
   headers:
-    - "[Host: hello.default.37.230.195.213.nip.io]"
+    - "[Host: load.default.37.230.195.213.nip.io]"
     - "[Connection: close]"
   uris:
     - "/"
